@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -13,9 +14,17 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
-var viewCount struct {
+type viewCount struct {
 	sync.Mutex
 	Count int64
+}
+
+var v viewCount
+
+func (n *viewCount) inc() {
+	n.Lock()
+	n.Count++
+	n.Unlock()
 }
 
 func hostname() string {
@@ -27,9 +36,22 @@ func hostname() string {
 	return hostname
 }
 
+func inc(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	v.inc()
+	bytes, err := json.Marshal(v)
+	if err != nil {
+		http.Error(w, "json.Marshall error: "+err.Error(), 500)
+	}
+	w.Write(bytes)
+}
+
 func main() {
 
+	fmt.Println("ViewCount", v.Count)
+	http.HandleFunc("/favicon.ico", http.NotFound)
 	http.HandleFunc("/", lk)
+	http.HandleFunc("/inc/", inc)
 
 	// http://stackoverflow.com/a/33985208/4534
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", 0))
@@ -64,11 +86,9 @@ func lk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(viewCount.Count)
-	viewCount.Lock()
-	viewCount.Count++
-	viewCount.Unlock()
-	t.Execute(w, viewCount)
+	fmt.Println(v.Count)
+	v.inc()
+	t.Execute(w, v)
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
