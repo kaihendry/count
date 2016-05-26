@@ -10,21 +10,41 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/skratchdot/open-golang/open"
 )
 
 type viewCount struct {
 	sync.Mutex
-	Count int64
+	count int64
+	time  time.Time
 }
 
 var v viewCount
 
 func (n *viewCount) inc() {
 	n.Lock()
-	n.Count++
+	n.count++
+	n.time = time.Now()
 	n.Unlock()
+}
+
+func (n *viewCount) getCount() int64 {
+	return n.count
+}
+
+func (n *viewCount) json() []byte {
+	n.count++
+	n.time = time.Now()
+	bytes, err := json.Marshal(struct {
+		Count int64 `json:"count"`
+		Epoch int64 `json:"time"`
+	}{n.count, n.time.Unix()})
+	if err != nil {
+		panic(err)
+	}
+	return bytes
 }
 
 func hostname() string {
@@ -39,16 +59,12 @@ func hostname() string {
 func inc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	v.inc()
-	bytes, err := json.Marshal(v)
-	if err != nil {
-		http.Error(w, "json.Marshall error: "+err.Error(), 500)
-	}
-	w.Write(bytes)
+	w.Write(v.json())
 }
 
 func main() {
 
-	fmt.Println("ViewCount", v.Count)
+	fmt.Println("ViewCount", v)
 	http.HandleFunc("/favicon.ico", http.NotFound)
 	http.HandleFunc("/", lk)
 	http.HandleFunc("/inc/", inc)
@@ -86,9 +102,10 @@ func lk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(v.Count)
 	v.inc()
-	t.Execute(w, v)
+	t.Execute(w, struct {
+		Count int64
+	}{v.count})
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
