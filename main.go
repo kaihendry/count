@@ -73,7 +73,7 @@ func main() {
 	http.HandleFunc("/inc/", inc)
 
 	// http://stackoverflow.com/a/33985208/4534
-	ln, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", *port))
+	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Panic(err)
 	}
