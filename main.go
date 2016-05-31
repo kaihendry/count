@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"log"
@@ -30,12 +31,7 @@ func (n *viewCount) inc() {
 	n.Unlock()
 }
 
-func (n *viewCount) getCount() int64 {
-	return n.count
-}
-
 func (n *viewCount) json() []byte {
-	n.count++
 	n.time = time.Now()
 	bytes, err := json.Marshal(struct {
 		Count int64 `json:"count"`
@@ -59,18 +55,25 @@ func hostname() string {
 func inc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	v.inc()
+	fmt.Println("Counter is now", v.count)
 	w.Write(v.json())
 }
 
+var port = flag.Int("port", 0, "listen port")
+var openbrowser = flag.Bool("openbrowser", true, "Open in browser")
+
 func main() {
+	flag.Parse()
 
 	fmt.Println("ViewCount", v)
 	http.HandleFunc("/favicon.ico", http.NotFound)
-	http.HandleFunc("/", lk)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/", countpage)
 	http.HandleFunc("/inc/", inc)
 
 	// http://stackoverflow.com/a/33985208/4534
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", 0))
+	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -78,7 +81,9 @@ func main() {
 	if a, ok := ln.Addr().(*net.TCPAddr); ok {
 		host := fmt.Sprintf("http://%s:%d", hostname(), a.Port)
 		log.Println("Serving from", host)
-		open.Start(host)
+		if *openbrowser {
+			open.Start(host)
+		}
 	}
 	if err := http.Serve(ln, nil); err != nil {
 		log.Panic(err)
@@ -86,15 +91,17 @@ func main() {
 
 }
 
-func lk(w http.ResponseWriter, r *http.Request) {
+func countpage(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.New("foo").Parse(`<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name=viewport content="width=device-width, initial-scale=1">
+<script src="static/main.js"></script>
 </head>
 <body>
-<h1>Count {{ .Count }}</h1>
+<button onClick="f(this)">{{ .Count }}</button>
 </body>
 </html>`)
 	if err != nil {
