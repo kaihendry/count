@@ -13,3 +13,7 @@ With `docker stop` it takes 10s, but even that seems very slow. What am I missin
 
 	May 31 15:26:23 teefour systemd[1]: Stopping Count...
 	May 31 15:26:33 teefour docker[492]: time="2016-05-31T15:26:33.137235364+08:00" level=info msg="Container d8b8df91f16988469a59c2590b41653c9436422da95b3a40968b59f1d3f74126 failed to exit within 10 seconds of signal 15 - using the force"
+
+Putting [htt.Serve in a goroutine](https://github.com/kaihendry/count/commit/091e799717e2b5b9f045a4895ac2dc7eea9157ef) now results in a 
+
+	count.service: Main process exited, code=exited, status=137/n/a
