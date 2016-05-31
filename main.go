@@ -87,9 +87,12 @@ func main() {
 			open.Start(host)
 		}
 	}
-	if err := http.Serve(ln, nil); err != nil {
-		log.Panic(err)
-	}
+
+	go func() {
+		if err := http.Serve(ln, nil); err != nil {
+			log.Panic(err)
+		}
+	}()
 
 	// Handle SIGTERM.
 	ch := make(chan os.Signal)
