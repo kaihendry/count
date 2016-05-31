@@ -65,7 +65,7 @@ var openbrowser = flag.Bool("openbrowser", true, "Open in browser")
 func main() {
 	flag.Parse()
 
-	fmt.Println("ViewCount", v)
+	// fmt.Println("ViewCount", v)
 	http.HandleFunc("/favicon.ico", http.NotFound)
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -73,7 +73,7 @@ func main() {
 	http.HandleFunc("/inc/", inc)
 
 	// http://stackoverflow.com/a/33985208/4534
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	ln, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", *port))
 	if err != nil {
 		log.Panic(err)
 	}

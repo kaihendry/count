@@ -1,4 +1,4 @@
 FROM golang
-RUN go install github.com/kaihendry/count
+RUN go get -x github.com/kaihendry/count
 ENTRYPOINT /go/bin/count -port 9000 -openbrowser false
 EXPOSE 9000
