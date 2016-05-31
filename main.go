@@ -9,10 +9,8 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/signal"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/skratchdot/open-golang/open"
@@ -88,16 +86,9 @@ func main() {
 		}
 	}
 
-	go func() {
-		if err := http.Serve(ln, nil); err != nil {
-			log.Panic(err)
-		}
-	}()
-
-	// Handle SIGTERM.
-	ch := make(chan os.Signal)
-	signal.Notify(ch, syscall.SIGTERM)
-	log.Printf("Received signal '%v'. Exiting.", <-ch)
+	if err := http.Serve(ln, nil); err != nil {
+		log.Panic(err)
+	}
 
 }
 
