@@ -72,6 +72,12 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", countpage)
+
+	// This should trigger a restart with count.service
+	http.HandleFunc("/stop", func(w http.ResponseWriter, r *http.Request) {
+		os.Exit(0)
+	})
+
 	http.HandleFunc("/inc/", inc)
 
 	// http://stackoverflow.com/a/33985208/4534
