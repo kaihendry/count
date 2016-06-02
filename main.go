@@ -117,6 +117,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 </head>
 <body>
+<h1>Hello YOUTUBE</h1>
 <button onClick="f(this)">{{ .Count }}</button>
 <p><a href=https://github.com/kaihendry/count>Source code</a></p>
 </body>
