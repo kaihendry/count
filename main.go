@@ -65,6 +65,7 @@ var port = flag.Int("port", 0, "listen port")
 var openbrowser = flag.Bool("openbrowser", true, "Open in browser")
 
 func main() {
+	ch := make(chan os.Signal)
 	flag.Parse()
 
 	// fmt.Println("ViewCount", v)
@@ -75,7 +76,8 @@ func main() {
 
 	// This should trigger a restart with count.service
 	http.HandleFunc("/stop", func(w http.ResponseWriter, r *http.Request) {
-		os.Exit(0)
+		w.WriteHeader(http.StatusOK)
+		ch <- syscall.SIGTERM
 	})
 
 	http.HandleFunc("/inc/", inc)
@@ -100,8 +102,6 @@ func main() {
 		}
 	}()
 
-	// Handle SIGTERM.
-	ch := make(chan os.Signal)
 	signal.Notify(ch, syscall.SIGTERM)
 	log.Printf("Received signal '%v'. Exiting.", <-ch)
 
