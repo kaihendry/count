@@ -6,10 +6,8 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 User=core
-ExecStartPre=-/usr/bin/docker kill count
-ExecStartPre=-/usr/bin/docker rm count
 ExecStartPre=-/usr/bin/docker build --no-cache -t count github.com/kaihendry/count
-ExecStart=/usr/bin/docker run --name count -p 9000:9000 count
+ExecStart=/usr/bin/docker run --rm --name count -p 9000:9000 count
 ExecStop=/usr/bin/docker stop count
 RestartSec=5
 Restart=always
