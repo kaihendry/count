@@ -1,5 +1,6 @@
 [Unit]
 Description=Count
+Before=caddy.service
 After=docker.service
 Requires=docker.service
 
