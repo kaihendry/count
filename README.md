@@ -1,5 +1,7 @@
 # Count !
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/kaihendry/count)](https://goreportcard.com/report/github.com/kaihendry/count)
+
 Count is a simple Web application to kick the wheels of the idea of a Golang
 microservice running on CoreOS. I want to figure out questions like:
 
