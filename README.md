@@ -1,6 +1,9 @@
 # Count !
 
+[![Build Status](https://travis-ci.org/kaihendry/count.svg?branch=master)](https://travis-ci.org/kaihendry/count)
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaihendry/count)](https://goreportcard.com/report/github.com/kaihendry/count)
+
 
 Count is a simple Web application to kick the wheels of various deployment
 methodologies like that of Github -> Docker Hub -> CoreOS or dokku.
