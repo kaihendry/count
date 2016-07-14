@@ -2,8 +2,8 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaihendry/count)](https://goreportcard.com/report/github.com/kaihendry/count)
 
-Count is a simple Web application to kick the wheels of the idea of a Golang
-microservice running on CoreOS. I want to figure out questions like:
+Count is a simple Web application to kick the wheels of various deployment
+methodologies like that of Github -> Docker Hub -> CoreOS or dokku.
 
 * [How to deploy this without any downtime to my users?](https://youtu.be/04np_kwmv_g)
 * How to roll back?
