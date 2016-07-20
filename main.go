@@ -57,7 +57,7 @@ func hostname() string {
 func inc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	v.inc()
-	fmt.Println("Counter is now", v.count)
+	log.Println("Counter is now", v.count)
 	w.Write(v.json())
 }
 
@@ -118,6 +118,13 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 </head>
 <body>
 <button onClick="f(this)">{{ .Count }}</button>
+
+<ul>
+{{range .Env}}
+<li>{{ . }}</li>
+{{end}}
+</ul>
+
 <p><a href=https://github.com/kaihendry/count>Source code</a></p>
 </body>
 </html>`)
@@ -129,7 +136,8 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 	v.inc()
 	t.Execute(w, struct {
 		Count int64
-	}{v.count})
+		Env   []string
+	}{v.count, os.Environ()})
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
