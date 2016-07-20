@@ -137,7 +137,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
-		ep := strings.Split(e, "=")
+		ep := strings.SplitN(e, "=", 2)
 		envmap[ep[0]] = ep[1]
 	}
 
