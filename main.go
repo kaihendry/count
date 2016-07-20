@@ -135,17 +135,21 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 
 	v.inc()
 
-	env := os.Environ()
-	m := make(map[string]string)
-	for _, e := range env {
+	envmap := make(map[string]string)
+	for _, e := range os.Environ() {
 		ep := strings.Split(e, "=")
-		m[ep[0]] = ep[1]
+		envmap[ep[0]] = ep[1]
 	}
 
-	t.Execute(w, struct {
+	err = t.Execute(w, struct {
 		Count int64
 		Env   map[string]string
-	}{v.count, m})
+	}{v.count, envmap})
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
