@@ -119,11 +119,11 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <body>
 <button onClick="f(this)">{{ .Count }}</button>
 
-<ul>
-{{range .Env}}
-<li>{{ . }}</li>
+<dl>
+{{range $key, $value := .Env}}
+<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
 {{end}}
-</ul>
+</dl>
 
 <p><a href=https://github.com/kaihendry/count>Source code</a></p>
 </body>
@@ -134,10 +134,18 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	v.inc()
+
+	env := os.Environ()
+	m := make(map[string]string)
+	for _, e := range env {
+		ep := strings.Split(e, "=")
+		m[ep[0]] = ep[1]
+	}
+
 	t.Execute(w, struct {
 		Count int64
-		Env   []string
-	}{v.count, os.Environ()})
+		Env   map[string]string
+	}{v.count, m})
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
