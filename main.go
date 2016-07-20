@@ -115,6 +115,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <meta charset="utf-8" />
 <meta name=viewport content="width=device-width, initial-scale=2">
 <script src="static/main.js"></script>
+<title>{{ .Count }}</title>
 </head>
 <body>
 <button onClick="f(this)">{{ .Count }}</button>
