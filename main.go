@@ -113,7 +113,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <html>
 <head>
 <meta charset="utf-8" />
-<meta name=viewport content="width=device-width, initial-scale=2">
+<meta name=viewport content="width=device-width, initial-scale=1">
 <script src="static/main.js"></script>
 <title>{{ .Count }}</title>
 </head>
@@ -121,7 +121,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <button onClick="f(this)">{{ .Count }}</button>
 
 <dl>
-{{range $key, $value := .Env}}
+{{range $key, $value := .Env -}}
 <dt>{{ $key }}</dt><dd>{{ $value }}</dd>
 {{end}}
 </dl>
