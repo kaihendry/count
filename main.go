@@ -122,7 +122,11 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 
 <dl>
 {{range $key, $value := .Env -}}
+{{ if eq $key "COMMIT" }}
+<dt>{{ $key }}</dt><dd><a href="https://github.com/kaihendry/count/commit/{{ $value }}">{{ $value }}</a></dd>
+{{else}}
 <dt>{{ $key }}</dt><dd>{{ $value }}</dd>
+{{end}}
 {{end}}
 </dl>
 
