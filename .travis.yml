@@ -1,4 +1,14 @@
-language: go
-
-go:
-  - tip
+sudo: required
+language: generic
+services:
+  - docker
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  - docker build -t $REPO --build-arg COMMIT=${COMMIT} .
+after_success:
+  - docker --version
+  - docker tag $REPO
+  - docker tag $REPO:$COMMIT $REPO:latest
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
