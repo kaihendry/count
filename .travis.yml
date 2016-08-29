@@ -5,11 +5,13 @@ services:
 before_install:
   - sudo apt-get update
   - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
-  - docker build -t $REPO --build-arg COMMIT=${TRAVIS_COMMIT} .
+  - docker build -t $REPO --build-arg COMMIT=${COMMIT} .
 after_success:
   - docker --version
   - docker tag $REPO
-  - docker tag $REPO:$TRAVIS_COMMIT $REPO:latest
-  - docker tag $REPO:$TRAVIS_COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker tag $REPO:$COMMIT $REPO:latest
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push $REPO
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::7}
