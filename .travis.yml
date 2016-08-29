@@ -8,8 +8,8 @@ before_install:
   - docker build -t $REPO --build-arg COMMIT=${COMMIT} .
 after_success:
   - docker --version
-  - docker tag $REPO
-  - docker tag $REPO:$COMMIT $REPO:latest
+  - docker tag $REPO $REPO:latest
+  - docker tag $REPO $REPO:git-$COMMIT
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push $REPO
 env:
