@@ -11,5 +11,5 @@ after_success:
   - docker tag $REPO
   - docker tag $REPO:$TRAVIS_COMMIT $REPO:latest
   - docker tag $REPO:$TRAVIS_COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push $REPO
