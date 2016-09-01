@@ -145,6 +145,11 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 		ep := strings.SplitN(e, "=", 2)
 		envmap[ep[0]] = ep[1]
 	}
+	envmap["REMOTE_ADDR"] = r.RemoteAddr
+	referer := r.Referer()
+	if referer != "" {
+		envmap["REFERER"] = referer
+	}
 
 	err = t.Execute(w, struct {
 		Count int64
