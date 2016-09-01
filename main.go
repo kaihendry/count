@@ -130,6 +130,12 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 {{end}}
 </dl>
 
+<h3>Request Header</h3>
+<dl>
+{{range $key, $value := .Header -}}
+<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
+{{end}}
+</dl>
 <p><a href=https://github.com/kaihendry/count>Source code</a></p>
 </body>
 </html>`)
@@ -152,9 +158,10 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, struct {
-		Count int64
-		Env   map[string]string
-	}{v.count, envmap})
+		Count  int64
+		Env    map[string]string
+		Header http.Header
+	}{v.count, envmap, r.Header})
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
