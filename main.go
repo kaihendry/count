@@ -110,7 +110,7 @@ func main() {
 func countpage(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.New("foo").Parse(`<!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
 <meta charset="utf-8" />
 <meta name=viewport content="width=device-width, initial-scale=1">
@@ -122,12 +122,12 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 
 <dl>
 {{range $key, $value := .Env -}}
-{{ if eq $key "COMMIT" }}
+{{ if eq $key "COMMIT" -}}
 <dt>{{ $key }}</dt><dd><a href="https://github.com/kaihendry/count/commit/{{ $value }}">{{ $value }}</a></dd>
 {{else}}
 <dt>{{ $key }}</dt><dd>{{ $value }}</dd>
-{{end}}
-{{end}}
+{{- end}}
+{{- end}}
 </dl>
 
 <h3>Request Header</h3>

@@ -1,4 +1,13 @@
-FROM golang:onbuild
+FROM golang:1.7-alpine
+
+ADD main.go /go/src/app/main.go
+ADD static /go/src/app/static/
+
+WORKDIR /go/src/app
+
+RUN apk --no-cache add curl git && \
+	go get -v -d && \
+	go build && go install -v
 
 ARG COMMIT
 ENV COMMIT ${COMMIT}
