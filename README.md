@@ -41,3 +41,5 @@ Bring it all down:
 
 	ecs-cli compose service down
 	ecs-cli down --force
+
+Helpers like `./deploy.sh` are to help developers new to Docker build, test & deploy via AWS ECR
