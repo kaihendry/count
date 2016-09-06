@@ -1,8 +1,8 @@
-FROM golang
-ADD . /go/src/github.com/spuul/count
-RUN go get github.com/skratchdot/open-golang/open
-RUN go install github.com/spuul/count
+FROM golang:onbuild
+
 ARG COMMIT
 ENV COMMIT ${COMMIT}
-ENTRYPOINT ["/go/bin/count", "-port", "9000", "-openbrowser", "false"]
+
 EXPOSE 9000
+
+ENTRYPOINT ["/go/bin/app", "-port", "9000", "-openbrowser", "false"]
