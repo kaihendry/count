@@ -23,9 +23,17 @@ Ensure <https://github.com/aws/amazon-ecs-cli> is installed:
 
 The tricky part is setting up the load balancer:
 
+	ecs-cli configure -r ap-southeast-1 --cluster count
 	ecs-cli up --capability-iam --keypair $(whoami)
 	./create-task.sh
+
+TODO: How do you figure out the VPC the cluster was created in?
+
 	./create-load-balancer.sh
+
+Be aware that I assume all your subnets are in one VPC. https://s.natalian.org/2017-01-19/ecs-setup.png
+This can easily be the case if you have some residue.
+
 	./create-service.sh
 
 Scale service like so:

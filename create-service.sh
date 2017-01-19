@@ -1,4 +1,4 @@
-export CLUSTER_NAME=default
+export CLUSTER_NAME=count
 
 aws --region ap-southeast-1 ecs create-service --service-name "ecscompose-service-count" \
 	--cluster "$CLUSTER_NAME" \
