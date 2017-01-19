@@ -1,4 +1,4 @@
-package main // import "github.com/kaihendry/count"
+package main
 
 import (
 	"encoding/json"
