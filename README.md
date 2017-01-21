@@ -15,6 +15,8 @@ methodologies like that of Github -> Docker Hub -> CoreOS or dokku.
 
 # AWS ECS guide
 
+Youtube video that runs through these steps: <https://youtu.be/5YF3qJM3uHA>
+
 Inspired by <https://github.com/aws/amazon-ecs-cli/issues/21#issuecomment-235480429>
 
 Ensure <https://github.com/aws/amazon-ecs-cli> is installed:
