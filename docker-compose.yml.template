@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    image: hendry/count:<TAG>
+    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:<TAG>
     ports:
      - "80:9000"
     mem_limit: 1043333120 # Taking all from micro
