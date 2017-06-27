@@ -3,11 +3,19 @@ machine:
     - docker
 
 dependencies:
-  post:
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/count:$CIRCLE_SHA1 .
+  pre:
+    - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+    - sudo chmod +x /usr/local/bin/ecs-cli
+    - /usr/local/bin/ecs-cli configure -c count
 
-deployment:
-  prod:
-    branch: master
-    commands:
-      - ./circle-deploy.sh
+dependencies:
+  post:
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$CIRCLE_SHA1 .
+
+master:
+  branch: master
+  commands:
+    - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$CIRCLE_SHA1
+    - sed "s/<TAG>/$CIRCLE_SHA1/" < docker-compose.yml.template > docker-compose.yml
+    - /usr/local/bin/ecs-cli compose -p count service up
