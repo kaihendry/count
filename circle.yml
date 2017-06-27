@@ -1,0 +1,13 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  post:
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/count:$CIRCLE_SHA1 .
+
+deployment:
+  prod:
+    branch: master
+    commands:
+      - ./circle-deploy.sh

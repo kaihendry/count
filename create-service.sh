@@ -1,6 +1,7 @@
-export CLUSTER_NAME=count
+export CLUSTER_NAME=$(awk -F "=" '/cluster/ {print $2}' ~/.ecs/config | tr -d ' ')
+export PROFILE=$(awk -F "=" '/aws_profile/ {print $2}' ~/.ecs/config | tr -d ' ')
 
-aws --region ap-southeast-1 ecs create-service --service-name "ecscompose-service-count" \
+aws --profile $PROFILE --region ap-southeast-1 ecs create-service --service-name "ecscompose-service-count" \
 	--cluster "$CLUSTER_NAME" \
 	--task-definition "ecscompose-count" \
 	--load-balancers "loadBalancerName=$CLUSTER_NAME,containerName=web,containerPort=9000" \
