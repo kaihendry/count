@@ -12,10 +12,11 @@ dependencies:
   post:
     - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$CIRCLE_SHA1 .
 
-master:
-  branch: master
-  commands:
-    - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
-    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$CIRCLE_SHA1
-    - sed "s/<TAG>/$CIRCLE_SHA1/" < docker-compose.yml.template > docker-compose.yml
-    - /usr/local/bin/ecs-cli compose -p count service up
+deployment:
+    master:
+      branch: master
+      commands:
+        - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+        - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$CIRCLE_SHA1
+        - sed "s/<TAG>/$CIRCLE_SHA1/" < docker-compose.yml.template > docker-compose.yml
+        - /usr/local/bin/ecs-cli compose -p count service up
