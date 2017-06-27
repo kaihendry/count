@@ -25,8 +25,10 @@ Ensure <https://github.com/aws/amazon-ecs-cli> is installed:
 
 The tricky part is setting up the load balancer:
 
-	ecs-cli configure -r ap-southeast-1 --cluster count
-	ecs-cli up --capability-iam --keypair $(whoami)
+	ecs-cli configure -r ap-southeast-1 --cluster count -p PROFILE_NAME
+
+	./up.sh
+
 	./create-task.sh
 
 TODO: How do you figure out the VPC the cluster was created in?

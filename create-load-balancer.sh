@@ -17,15 +17,15 @@ do
 	break
 done
 
-subnets=$(aws --profile "$PROFILE" ec2 describe-subnets | jq -r ".Subnets[] | select(.VpcId==\"$VpcId\") | .SubnetId")
+subnets=$(aws --profile "$PROFILE" ec2 describe-subnets | jq -r ".Subnets[] | select(.VpcId==\"$VpcId\") | .SubnetId" | tr '\n' ' ')
 
 echo sggroup $sggroup
 echo subnet $subnets
 echo name $CLUSTER_NAME
 
-aws --profile "$PROFILE" elb create-load-balancer --load-balancer-name "$CLUSTER_NAME" \
+echo aws --profile "$PROFILE" elb create-load-balancer --load-balancer-name "$CLUSTER_NAME" \
 	--listeners Protocol="HTTP,LoadBalancerPort=80,InstanceProtocol=HTTP,InstancePort=80" \
 	--subnets "$subnets" --security-groups "$sggroup"
 
-aws --profile "$PROFILE" elb configure-health-check --load-balancer-name "$CLUSTER_NAME" \
+echo aws --profile "$PROFILE" elb configure-health-check --load-balancer-name "$CLUSTER_NAME" \
 	--health-check Target=HTTP:80/,Interval=10,UnhealthyThreshold=2,HealthyThreshold=2,Timeout=3
