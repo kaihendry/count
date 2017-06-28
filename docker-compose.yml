@@ -4,4 +4,3 @@ services:
     image: hendry/count
     ports:
      - "80:9000"
-    mem_limit: 1043333120 # Taking all from micro
