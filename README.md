@@ -55,3 +55,5 @@ Bring it all down:
 	ecs-cli down --force
 
 Helpers like `./deploy.sh` are to help developers new to Docker build, test & deploy via AWS ECR
+
+https://github.com/search?utf8=%E2%9C%93&q=filename%3A.travis.yml+ecs-cli+compose&type=
