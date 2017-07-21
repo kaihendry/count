@@ -3,8 +3,6 @@ language: generic
 services:
   - docker
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
   - docker build -t $REPO --build-arg COMMIT=${COMMIT} .
 after_success:
   - docker --version

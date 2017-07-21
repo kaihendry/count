@@ -1,20 +1,22 @@
 machine:
   services:
     - docker
+  environment:
+    COMMIT: $(echo $CIRCLE_SHA1 | cut -c -7)
 
 dependencies:
   post:
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 .
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CIRCLE_PROJECT_REPONAME:$COMMIT .
 
 deployment:
     master:
       branch: master
       commands:
         - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
-        - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+        - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CIRCLE_PROJECT_REPONAME:$COMMIT
         - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
         - sudo chmod +x /usr/local/bin/ecs-cli
-        - /usr/local/bin/ecs-cli configure -c $CIRCLE_PROJECT_REPONAME
+        - /usr/local/bin/ecs-cli configure -c $CIRCLE_BRANCH
         - envsubst < docker-compose.yml.template > docker-compose.yml
         - cat docker-compose.yml
-        - /usr/local/bin/ecs-cli compose -p $CIRCLE_PROJECT_REPONAME service up
+        - /usr/local/bin/ecs-cli compose -p $CIRCLE_BRANCH service up
