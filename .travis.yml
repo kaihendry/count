@@ -3,13 +3,13 @@ language: generic
 services:
   - docker
 before_install:
-  - docker build -t $REPO --build-arg COMMIT=${COMMIT} .
+  - docker build -t $TRAVIS_REPO_SLUG --build-arg COMMIT=${COMMIT} .
 after_success:
   - docker --version
-  - docker tag $REPO $REPO:latest
-  - docker tag $REPO $REPO:$COMMIT
+  - docker tag $TRAVIS_REPO_SLUG $TRAVIS_REPO_SLUG:latest
+  - docker tag $TRAVIS_REPO_SLUG $TRAVIS_REPO_SLUG:$COMMIT
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  - docker push $REPO
+  - docker push $TRAVIS_REPO_SLUG
   - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
   - sudo chmod +x /usr/local/bin/ecs-cli
   - /usr/local/bin/ecs-cli configure -c $TRAVIS_BRANCH
