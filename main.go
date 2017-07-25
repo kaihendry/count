@@ -117,7 +117,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 <title>{{ .Count }}</title>
 <style>
-body { background-color: green; }
+body { background-color: yellow; }
 </style>
 </head>
 <body>
