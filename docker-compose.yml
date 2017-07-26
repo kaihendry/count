@@ -1,6 +1,6 @@
 version: '2'
 services:
   web:
-    image: hendry/count
+    image: 407461997746.dkr.ecr.ap-southeast-1.amazonaws.com/count:038857c
     ports:
      - "80:9000"

@@ -14,8 +14,6 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
-	"github.com/skratchdot/open-golang/open"
 )
 
 type viewCount struct {
@@ -62,7 +60,6 @@ func inc(w http.ResponseWriter, r *http.Request) {
 }
 
 var port = flag.Int("port", 0, "listen port")
-var openbrowser = flag.Bool("openbrowser", true, "Open in browser")
 
 func main() {
 	ch := make(chan os.Signal)
@@ -91,9 +88,6 @@ func main() {
 	if a, ok := ln.Addr().(*net.TCPAddr); ok {
 		host := fmt.Sprintf("http://%s:%d", hostname(), a.Port)
 		log.Println("Serving from", host)
-		if *openbrowser {
-			open.Start(host)
-		}
 	}
 
 	go func() {
@@ -117,7 +111,6 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 <title>{{ .Count }}</title>
 <style>
-body { background-color: coral; }
 </style>
 </head>
 <body>
