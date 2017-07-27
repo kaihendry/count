@@ -109,9 +109,9 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <meta charset="utf-8" />
 <meta name=viewport content="width=device-width, initial-scale=1">
 <script src="static/main.js"></script>
-<title>{{ .Count }}</title>
+<title>YOUTUBE {{ .Count }}</title>
 <style>
-body { background-color: coral; font-family: Georgia; }
+body { background-color: blue; font-family: Georgia; }
 </style>
 </head>
 <body>
