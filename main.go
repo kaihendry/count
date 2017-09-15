@@ -108,7 +108,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 <title>Count: {{ .Count }}</title>
 <style>
-body { background-color: pink; font-family: Georgia; }
+body { background-color: blue; font-family: Georgia; }
 </style>
 </head>
 <body>
@@ -143,6 +143,9 @@ body { background-color: pink; font-family: Georgia; }
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
+		if strings.HasPrefix(ep[0], "AWS") {
+			continue
+		}
 		envmap[ep[0]] = ep[1]
 	}
 	envmap["REMOTE_ADDR"] = r.RemoteAddr
