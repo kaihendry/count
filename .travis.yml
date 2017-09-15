@@ -1,21 +1,16 @@
 sudo: required
-language: generic
-services:
-  - docker
+language: go
+go:
+- tip
 before_install:
-  - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO:$COMMIT --build-arg COMMIT=${COMMIT} .
+- curl -sfL https://raw.githubusercontent.com/apex/up/master/install.sh | sudo sh
+  #install:
+  #- go get github.com/golang/dep/cmd/dep
+  #- dep ensure -v
+  #- dep status
+script:
+- cd $TRAVIS_BUILD_DIR
+- go test -v ./...
 after_success:
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-  - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
-  - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO:$COMMIT
-  - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
-  - sudo chmod +x /usr/local/bin/ecs-cli
-  - /usr/local/bin/ecs-cli configure -c $TRAVIS_BRANCH
-  - envsubst < docker-compose.yml.template > docker-compose.yml
-  - cat docker-compose.yml
-  - /usr/local/bin/ecs-cli compose -p $TRAVIS_BRANCH service up
-env:
-  global:
-  - COMMIT=${TRAVIS_COMMIT::7}
-  - REPO: $(echo $TRAVIS_REPO_SLUG | cut -f2 -d/)
+- test "$TRAVIS_BRANCH" = master && up deploy
+- up url
