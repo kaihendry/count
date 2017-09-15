@@ -59,8 +59,6 @@ func inc(w http.ResponseWriter, r *http.Request) {
 	w.Write(v.json())
 }
 
-var port = flag.Int("port", 0, "listen port")
-
 func main() {
 	ch := make(chan os.Signal)
 	flag.Parse()
@@ -79,8 +77,7 @@ func main() {
 
 	http.HandleFunc("/inc/", inc)
 
-	// http://stackoverflow.com/a/33985208/4534
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	ln, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -109,7 +106,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <meta charset="utf-8" />
 <meta name=viewport content="width=device-width, initial-scale=1">
 <script src="static/main.js"></script>
-<title>YOUTUBE {{ .Count }}</title>
+<title>Count: {{ .Count }}</title>
 <style>
 body { background-color: pink; font-family: Georgia; }
 </style>
