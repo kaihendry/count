@@ -3,17 +3,16 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"html/template"
-	"log"
-	"net"
 	"net/http"
 	"os"
-	"os/signal"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
+
+	"github.com/apex/log"
+	jsonl "github.com/apex/log/handlers/json"
+	"github.com/apex/log/handlers/text"
 )
 
 type viewCount struct {
@@ -27,6 +26,9 @@ var v viewCount
 func (n *viewCount) inc() {
 	n.Lock()
 	n.count++
+	log.WithFields(log.Fields{
+		"count": v.count,
+	}).Info("count")
 	n.time = time.Now()
 	n.Unlock()
 }
@@ -43,24 +45,21 @@ func (n *viewCount) json() []byte {
 	return bytes
 }
 
-func hostname() string {
-	hostname, _ := os.Hostname()
-	// If hostname does not have dots (i.e. not fully qualified), then return zeroconf address for LAN browsing
-	if strings.Split(hostname, ".")[0] == hostname {
-		return hostname + ".local"
+func init() {
+	if os.Getenv("UP_STAGE") == "" {
+		log.SetHandler(text.Default)
+	} else {
+		log.SetHandler(jsonl.Default)
 	}
-	return hostname
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	v.inc()
-	log.Println("Counter is now", v.count)
 	w.Write(v.json())
 }
 
 func main() {
-	ch := make(chan os.Signal)
 	flag.Parse()
 
 	// fmt.Println("ViewCount", v)
@@ -69,32 +68,10 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", countpage)
 
-	// This should trigger a restart with count.service
-	http.HandleFunc("/stop", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		ch <- syscall.SIGTERM
-	})
-
 	http.HandleFunc("/inc/", inc)
-
-	ln, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
-	if err != nil {
-		log.Panic(err)
+	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
+		log.Fatalf("error listening: %s", err)
 	}
-
-	if a, ok := ln.Addr().(*net.TCPAddr); ok {
-		host := fmt.Sprintf("http://%s:%d", hostname(), a.Port)
-		log.Println("Serving from", host)
-	}
-
-	go func() {
-		if err := http.Serve(ln, nil); err != nil {
-			log.Panic(err)
-		}
-	}()
-
-	signal.Notify(ch, syscall.SIGTERM)
-	log.Printf("Received signal '%v'. Exiting.", <-ch)
 
 }
 
@@ -108,7 +85,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 <title>Count: {{ .Count }}</title>
 <style>
-body { background-color: blue; font-family: Georgia; }
+body { background-color: pink; font-family: Georgia; }
 </style>
 </head>
 <body>
@@ -164,7 +141,5 @@ body { background-color: blue; font-family: Georgia; }
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 
 }

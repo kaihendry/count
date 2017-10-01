@@ -1,4 +1,5 @@
 {
   "name": "count",
-  "profile": "mine"
+  "profile": "mine",
+  "regions": ["ap-southeast-1", "eu-west-2"]
 }
