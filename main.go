@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -120,16 +121,26 @@ body { background-color: pink; font-family: Georgia; }
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
-		if strings.HasPrefix(ep[0], "AWS") {
+
+		// Skip potentially security sensitive AWS stuff
+		if ep[0] == "AWS_SECRET_ACCESS_KEY" {
 			continue
 		}
+		if ep[0] == "AWS_SESSION_TOKEN" {
+			continue
+		}
+
 		envmap[ep[0]] = ep[1]
 	}
-	envmap["REMOTE_ADDR"] = r.RemoteAddr
-	referer := r.Referer()
-	if referer != "" {
-		envmap["REFERER"] = referer
-	}
+
+	// https://golang.org/pkg/net/http/#Request
+	envmap["METHOD"] = r.Method
+	envmap["PROTO"] = r.Proto
+	envmap["CONTENTLENGTH"] = fmt.Sprintf("%d", r.ContentLength)
+	envmap["TRANSFERENCODING"] = strings.Join(r.TransferEncoding, ",")
+	envmap["REMOTEADDR"] = r.RemoteAddr
+	envmap["HOST"] = r.Host
+	envmap["REQUESTURI"] = r.RequestURI
 
 	err = t.Execute(w, struct {
 		Count  int64
