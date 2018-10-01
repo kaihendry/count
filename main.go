@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"html/template"
@@ -9,41 +8,27 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/apex/log"
 	jsonl "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
+	"github.com/tj/go/http/response"
 )
 
 type viewCount struct {
-	sync.Mutex
-	count int64
-	time  time.Time
+	sync.RWMutex
+	count int
 }
 
 var v viewCount
 
-func (n *viewCount) inc() {
+func (n *viewCount) inc() (currentcount int) {
 	n.Lock()
+	// atomic.AddInt32(n.count, 1)
 	n.count++
-	log.WithFields(log.Fields{
-		"count": v.count,
-	}).Info("count")
-	n.time = time.Now()
+	currentcount = n.count
 	n.Unlock()
-}
-
-func (n *viewCount) json() []byte {
-	n.time = time.Now()
-	bytes, err := json.Marshal(struct {
-		Count int64 `json:"count"`
-		Epoch int64 `json:"time"`
-	}{n.count, n.time.Unix()})
-	if err != nil {
-		panic(err)
-	}
-	return bytes
+	return currentcount
 }
 
 func init() {
@@ -55,15 +40,12 @@ func init() {
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	v.inc()
-	w.Write(v.json())
+	response.JSON(w, v.inc())
 }
 
 func main() {
 	flag.Parse()
 
-	// fmt.Println("ViewCount", v)
 	http.HandleFunc("/favicon.ico", http.NotFound)
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -78,7 +60,7 @@ func main() {
 
 func countpage(w http.ResponseWriter, r *http.Request) {
 
-	t, err := template.New("foo").Parse(`<!DOCTYPE html>
+	t := template.Must(template.New("").Parse(`<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset="utf-8" />
@@ -110,18 +92,11 @@ body { background-color: pink; font-family: Georgia; }
 </dl>
 <p><a href=https://github.com/kaihendry/count>Source code</a></p>
 </body>
-</html>`)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	v.inc()
+</html>`))
 
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
-
 		// Skip potentially security sensitive AWS stuff
 		if ep[0] == "AWS_SECRET_ACCESS_KEY" {
 			continue
@@ -142,15 +117,14 @@ body { background-color: pink; font-family: Georgia; }
 	envmap["HOST"] = r.Host
 	envmap["REQUESTURI"] = r.RequestURI
 
-	err = t.Execute(w, struct {
-		Count  int64
+	err := t.Execute(w, struct {
+		Count  int
 		Env    map[string]string
 		Header http.Header
-	}{v.count, envmap, r.Header})
+	}{v.inc(), envmap, r.Header})
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 }
