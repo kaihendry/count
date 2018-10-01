@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"sync"
+	"sync/atomic"
 
 	"github.com/apex/log"
 	jsonl "github.com/apex/log/handlers/json"
@@ -15,28 +15,22 @@ import (
 	"github.com/tj/go/http/response"
 )
 
-type viewCount struct {
-	sync.RWMutex
-	count int
-}
-
-var v viewCount
-
-func (n *viewCount) inc() (currentcount int) {
-	n.Lock()
-	// atomic.AddInt32(n.count, 1)
-	n.count++
-	currentcount = n.count
-	n.Unlock()
-	return currentcount
-}
-
 func init() {
 	if os.Getenv("UP_STAGE") == "" {
 		log.SetHandler(text.Default)
 	} else {
 		log.SetHandler(jsonl.Default)
 	}
+}
+
+type viewCount struct {
+	count int32
+}
+
+var v viewCount
+
+func (n *viewCount) inc() (currentcount int32) {
+	return atomic.AddInt32(&n.count, 1)
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +62,7 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 <script src="static/main.js"></script>
 <title>Count: {{ .Count }}</title>
 <style>
-body { background-color: pink; font-family: Georgia; }
+body { background-color: grey; font-family: Georgia; }
 </style>
 </head>
 <body>
@@ -118,7 +112,7 @@ body { background-color: pink; font-family: Georgia; }
 	envmap["REQUESTURI"] = r.RequestURI
 
 	err := t.Execute(w, struct {
-		Count  int
+		Count  int32
 		Env    map[string]string
 		Header http.Header
 	}{v.inc(), envmap, r.Header})
