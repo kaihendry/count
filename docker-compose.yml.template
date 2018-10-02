@@ -1,6 +1,0 @@
-version: '2'
-services:
-  web:
-    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/count:$COMMIT
-    ports:
-     - "80:9000"
