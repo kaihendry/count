@@ -23,14 +23,12 @@ func init() {
 	}
 }
 
-type viewCount struct {
-	count int32
-}
+type viewCount int32
 
 var v viewCount
 
 func (n *viewCount) inc() (currentcount int32) {
-	return atomic.AddInt32(&n.count, 1)
+	return atomic.AddInt32((*int32)(n), 1)
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
