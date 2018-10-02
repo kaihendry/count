@@ -1,16 +1,7 @@
 sudo: required
 language: go
-go:
-- tip
 before_install:
-- curl -sfL https://raw.githubusercontent.com/apex/up/master/install.sh | sudo sh
-  #install:
-  #- go get github.com/golang/dep/cmd/dep
-  #- dep ensure -v
-  #- dep status
-script:
-- cd $TRAVIS_BUILD_DIR
-- go test -v ./...
+  - travis_retry curl -sf https://up.apex.sh/install | sudo sh
 after_success:
-- test "$TRAVIS_BRANCH" = master && up deploy
-- up url
+  - test "$TRAVIS_BRANCH" = master && up deploy
+  - up url
