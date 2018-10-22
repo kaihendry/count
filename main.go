@@ -52,39 +52,7 @@ func main() {
 
 func countpage(w http.ResponseWriter, r *http.Request) {
 
-	t := template.Must(template.New("").Parse(`<!DOCTYPE html>
-<html lang=en>
-<head>
-<meta charset="utf-8" />
-<meta name=viewport content="width=device-width, initial-scale=1">
-<script src="static/main.js"></script>
-<title>Count: {{ .Count }}</title>
-<style>
-body { background-color: grey; font-family: Georgia; }
-</style>
-</head>
-<body>
-<button onClick="f(this)">{{ .Count }}</button>
-
-<dl>
-{{range $key, $value := .Env -}}
-{{ if eq $key "COMMIT" -}}
-<dt>{{ $key }}</dt><dd><a href="https://github.com/kaihendry/count/commit/{{ $value }}">{{ $value }}</a></dd>
-{{else}}
-<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
-{{- end}}
-{{- end}}
-</dl>
-
-<h3>Request Header</h3>
-<dl>
-{{range $key, $value := .Header -}}
-<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
-{{end}}
-</dl>
-<p><a href=https://github.com/kaihendry/count>Source code</a></p>
-</body>
-</html>`))
+	t := template.Must(template.New("index").ParseFiles("static/index.tmpl"))
 
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
@@ -109,7 +77,7 @@ body { background-color: grey; font-family: Georgia; }
 	envmap["HOST"] = r.Host
 	envmap["REQUESTURI"] = r.RequestURI
 
-	err := t.Execute(w, struct {
+	err := t.ExecuteTemplate(w, "index.tmpl", struct {
 		Count  int32
 		Env    map[string]string
 		Header http.Header
