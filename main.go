@@ -91,5 +91,5 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 }
 
 func prometheus(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "count %d", v)
+	fmt.Fprintf(w, "count %d\n", v)
 }
