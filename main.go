@@ -41,6 +41,7 @@ func main() {
 	http.HandleFunc("/favicon.ico", http.NotFound)
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/metrics", prometheus)
 	http.HandleFunc("/", countpage)
 
 	http.HandleFunc("/inc/", inc)
@@ -87,4 +88,8 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func prometheus(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "count %d", v)
 }
