@@ -91,5 +91,5 @@ func countpage(w http.ResponseWriter, r *http.Request) {
 }
 
 func prometheus(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "# HELP count_total shows the current count.\n# TYPE count_total counter\ncount_total %d\n", v)
+	fmt.Fprintf(w, "# HELP count_total shows the in-memory count, which will get reset in the event of the lambda going cold or scaling.\n# TYPE count_total counter\ncount_total %d\n", v)
 }
