@@ -1,7 +1,6 @@
-package main
+package api
 
 import (
-	"flag"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -35,23 +34,7 @@ func inc(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, v.inc())
 }
 
-func main() {
-	flag.Parse()
-
-	http.HandleFunc("/favicon.ico", http.NotFound)
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/metrics", prometheus)
-	http.HandleFunc("/", countpage)
-
-	http.HandleFunc("/inc/", inc)
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
-		log.Fatalf("error listening: %s", err)
-	}
-
-}
-
-func countpage(w http.ResponseWriter, r *http.Request) {
+func Countpage(w http.ResponseWriter, r *http.Request) {
 
 	t := template.Must(template.New("index").ParseFiles("static/index.tmpl"))
 
