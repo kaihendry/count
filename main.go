@@ -1,27 +1,15 @@
 package main
 
 import (
-	"flag"
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"strings"
 	"sync/atomic"
-
-	"github.com/apex/log"
-	jsonl "github.com/apex/log/handlers/json"
-	"github.com/apex/log/handlers/text"
-	"github.com/tj/go/http/response"
 )
-
-func init() {
-	if os.Getenv("UP_STAGE") == "" {
-		log.SetHandler(text.Default)
-	} else {
-		log.SetHandler(jsonl.Default)
-	}
-}
 
 type viewCount int32
 
@@ -32,24 +20,27 @@ func (n *viewCount) inc() (currentcount int32) {
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, v.inc())
-}
-
-func main() {
-	flag.Parse()
-
-	http.HandleFunc("/favicon.ico", http.NotFound)
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/metrics", prometheus)
-	http.HandleFunc("/", countpage)
-
-	http.HandleFunc("/inc/", inc)
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
-		log.Fatalf("error listening: %s", err)
+	b, err := json.Marshal(v.inc())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
 }
+
+func routes() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/favicon.ico", http.NotFound)
+	fs := http.FileServer(http.Dir("./static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.HandleFunc("/metrics", prometheus)
+	mux.HandleFunc("/", countpage)
+	mux.HandleFunc("/inc/", inc)
+	return mux
+}
+
+func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), routes())) }
 
 func countpage(w http.ResponseWriter, r *http.Request) {
 
