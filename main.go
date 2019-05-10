@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -20,13 +19,8 @@ func (n *viewCount) inc() (currentcount int32) {
 }
 
 func inc(w http.ResponseWriter, r *http.Request) {
-	b, err := json.Marshal(v.inc())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	fmt.Fprintf(w, "%d", v.inc()) // actual valid
 }
 
 func routes() *http.ServeMux {
