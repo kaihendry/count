@@ -13,6 +13,7 @@ import (
 type countHandler struct{ n int32 }
 
 func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), routes())) }
+
 func (h *countHandler) inc() int32 {
 	return atomic.AddInt32(&h.n, 1)
 }
