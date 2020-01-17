@@ -10,9 +10,8 @@ ARG VERSION
 LABEL org.label-schema.version=$VERSION
 
 RUN echo Building for ${TARGET_ARCH}
-RUN go env && go version
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGET_ARCH} \
-	go build -ldflags "-X main.Version=${VERSION} -X main.Branch=${BRANCH}"
+	go build -ldflags "-X main.Version=${VERSION}"
 
 FROM scratch
 COPY --from=builder /app/count /app/
