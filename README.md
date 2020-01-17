@@ -1,3 +1,3 @@
-# Given up on ECS
+Using Docker Hub for hosting and building the image
 
-Going serverless with http://github.com/apex/up to preserve my sanity.
+https://hub.docker.com/repository/docker/hendry/count
