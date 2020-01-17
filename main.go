@@ -10,6 +10,8 @@ import (
 	"sync/atomic"
 )
 
+var Version string
+
 type countHandler struct{ n int32 }
 
 func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), routes())) }
@@ -47,11 +49,11 @@ func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 		if ep[0] == "AWS_SESSION_TOKEN" {
 			continue
 		}
-
 		envmap[ep[0]] = ep[1]
 	}
 
 	// https://golang.org/pkg/net/http/#Request
+	envmap["COUNTVERSION"] = Version
 	envmap["METHOD"] = r.Method
 	envmap["PROTO"] = r.Proto
 	envmap["CONTENTLENGTH"] = fmt.Sprintf("%d", r.ContentLength)
