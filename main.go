@@ -14,7 +14,7 @@ var Version string
 
 type countHandler struct{ n int32 }
 
-func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), routes())) }
+func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT"), routes())) }
 
 func (h *countHandler) inc() int32 {
 	return atomic.AddInt32(&h.n, 1)
@@ -49,7 +49,7 @@ func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 		if ep[0] == "AWS_SESSION_TOKEN" {
 			continue
 		}
-		envmap[ep[0]] = ep[1]
+		envmap[ep[0]] = "********************" //ep[1]
 	}
 
 	// https://golang.org/pkg/net/http/#Request

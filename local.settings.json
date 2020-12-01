@@ -1,0 +1,8 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "custom",
+    "AzureWebJobsStorage": "",
+    "AzureFunctionsJobHost__customHandler__description__defaultExecutablePath": "bin/local/main"
+  }
+}
