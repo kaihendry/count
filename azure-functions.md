@@ -43,7 +43,7 @@
 
     Also note that we added a config to change the default route prefix from `/api` to `/`.
 
-1. Update `local.settings.json` to override the executable to start when running locally. We do this because we're running a different OS or architecture locally than in production.
+1. Update `local.settings.json` to override the executable to start when running locally. We do this because we're running a different OS or architecture locally than in production. If running locally on Windows, this might be `"bin\\local\\main.exe"` instead.
 
     ```json
     {
@@ -86,7 +86,12 @@
 1. Build the app locally and run it.
 
     ```bash
+    # linux/macOS
     go build -o bin/local/main main.go
+
+    # Windows
+    go build -o bin/local/main.exe main.go
+
     func start --verbose
     ```
 
