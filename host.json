@@ -14,7 +14,7 @@
   },
   "customHandler": {
     "description": {
-      "defaultExecutablePath": "./bin/production/main"
+      "defaultExecutablePath": "./bin/local/main"
     },
     "enableForwardingHttpRequest": true
   },

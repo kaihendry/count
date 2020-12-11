@@ -111,8 +111,8 @@
 
     ```bash
     az login
-    az group create --name AzureFunctionsQuickstart-rg --location westeurope
-    az storage account create --name <STORAGE_NAME> --location westeurope --resource-group AzureFunctionsQuickstart-rg --sku Standard_LRS
-    az functionapp create --resource-group AzureFunctionsQuickstart-rg --consumption-plan-location westeurope --runtime custom --functions-version 3 --os-type Linux --name <APP_NAME> --storage-account <STORAGE_NAME>
+    az group create --name AzureFunctionsQuickstart-rg --location eastasia
+    az storage account create --name <STORAGE_NAME> --location eastasia --resource-group AzureFunctionsQuickstart-rg --sku Standard_LRS
+    az functionapp create --resource-group AzureFunctionsQuickstart-rg --consumption-plan-location eastasia --runtime custom --functions-version 3 --os-type Linux --name <APP_NAME> --storage-account <STORAGE_NAME>
     func azure functionapp publish <APP_NAME>
     ```
