@@ -1,6 +1,14 @@
 {
   "name": "count",
-  "profile": "mine",
+  "profile": "gosls",
+  "hooks": {
+    "build": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server *.go"
+  },
+  "stages": {
+    "staging": {
+      "domain": "count.goserverless.sg"
+    }
+  },
   "regions": [
     "ap-southeast-1"
   ]
