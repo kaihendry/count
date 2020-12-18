@@ -1,7 +1,0 @@
-sudo: required
-language: go
-before_install:
-  - travis_retry curl -sf https://up.apex.sh/install | sudo sh
-after_success:
-  - test "$TRAVIS_BRANCH" = master && up deploy
-  - up url

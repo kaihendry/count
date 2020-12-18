@@ -1,5 +1,5 @@
 # GCP Cloud Functions
 
-STATUS: BROKEN
+TODO: Figure out how to map https://asia-east2-idiotbox.cloudfunctions.net/Countpage to a domain.
 
-	Error: could not handle the request
+https://console.cloud.google.com/functions/details/asia-east2/Countpage?project=idiotbox&tab=logs
