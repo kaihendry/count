@@ -1,0 +1,64 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    client.knative.dev/user-image: gcr.io/idiotbox/count
+    run.googleapis.com/client-name: gcloud
+    run.googleapis.com/client-version: 321.0.0
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    serving.knative.dev/creator: kai.hendry@gmail.com
+    serving.knative.dev/lastModifier: kai.hendry@gmail.com
+  creationTimestamp: '2020-12-18T04:02:49.172606Z'
+  generation: 2
+  labels:
+    cloud.googleapis.com/location: asia-southeast1
+  name: count
+  namespace: '1006072560286'
+  resourceVersion: AAW2tV31+Q8
+  selfLink: /apis/serving.knative.dev/v1/namespaces/1006072560286/services/count
+  uid: 5e756173-886a-4257-bdf8-c95ccf4bb7f3
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '1000'
+        client.knative.dev/user-image: gcr.io/idiotbox/count
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 321.0.0
+      name: count-00002-geh
+    spec:
+      containerConcurrency: 80
+      containers:
+      - image: gcr.io/idiotbox/count
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
+status:
+  address:
+    url: https://count-k6uebfrpfa-as.a.run.app
+  conditions:
+  - lastTransitionTime: '2020-12-18T04:16:05.290255Z'
+    status: 'True'
+    type: Ready
+  - lastTransitionTime: '2020-12-18T04:15:58.801678Z'
+    status: 'True'
+    type: ConfigurationsReady
+  - lastTransitionTime: '2020-12-18T04:16:05.290255Z'
+    status: 'True'
+    type: RoutesReady
+  latestCreatedRevisionName: count-00002-geh
+  latestReadyRevisionName: count-00002-geh
+  observedGeneration: 2
+  traffic:
+  - latestRevision: true
+    percent: 100
+    revisionName: count-00002-geh
+  url: https://count-k6uebfrpfa-as.a.run.app

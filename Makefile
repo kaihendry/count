@@ -12,3 +12,6 @@ localbuild:
 
 localrun:
 	docker run -p 3000:8080 count
+
+service.yaml:
+	gcloud run services describe count --format yaml --platform managed > service.yaml
