@@ -1,3 +1,5 @@
-# Given up on ECS
+# GCP Cloud Functions
 
-Going serverless with http://github.com/apex/up to preserve my sanity.
+STATUS: BROKEN
+
+	Error: could not handle the request
