@@ -67,7 +67,7 @@ body { background-color: white; font-family: Georgia; }
 <dt>{{ $key }}</dt><dd>{{ $value }}</dd>
 {{end}}
 </dl>
-<p><a href=https://github.com/kaihendry/count>Source code</a></p>
+<p><a href=https://github.com/kaihendry/count/tree/azure-functions>Source code</a></p>
 </body>
 </html>`)
 
