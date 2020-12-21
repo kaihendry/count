@@ -1,4 +1,4 @@
-STACK = count
+STACK = samcount
 PROFILE = gosls
 
 .PHONY: build deploy validate destroy

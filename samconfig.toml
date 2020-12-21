@@ -1,8 +1,8 @@
 version = 0.1
-[gosls]
-[gosls.deploy]
-[gosls.deploy.parameters]
-stack_name = "count"
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "samcount"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-ob9hms4zhr6o"
 s3_prefix = "count"
 region = "ap-southeast-1"
