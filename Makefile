@@ -1,11 +1,13 @@
 PROJECTID = idiotbox
 SERVICE = count
 
+# Takes the most time
 build:
 	gcloud builds submit --tag gcr.io/$(PROJECTID)/$(SERVICE)
 
+# https://cloud.google.com/sdk/gcloud/reference/run/deploy
 deploy:
-	gcloud run deploy --image gcr.io/$(PROJECTID)/$(SERVICE) --platform managed --region asia-southeast1 --allow-unauthenticated
+	gcloud run deploy $(SERVICE) --image gcr.io/$(PROJECTID)/$(SERVICE) --platform managed --region asia-southeast1 --allow-unauthenticated
 
 localbuild:
 	docker build -t count .
@@ -15,3 +17,7 @@ localrun:
 
 service.yaml:
 	gcloud run services describe count --format yaml --platform managed > service.yaml
+
+# https://cloud.google.com/run/docs/mapping-custom-domains#command-line
+domainsetup:
+	gcloud beta run domain-mappings create --service $(SERVICE) --domain $(SERVICE).dabase.com --platform managed
