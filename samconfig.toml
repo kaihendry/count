@@ -1,0 +1,11 @@
+version = 0.1
+[gosls]
+[gosls.deploy]
+[gosls.deploy.parameters]
+stack_name = "count"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-ob9hms4zhr6o"
+s3_prefix = "count"
+region = "ap-southeast-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "DomainName=\"sam.goserverless.sg\" ACMCertificateArn=\"arn:aws:acm:us-east-1:862322258447:certificate/a7cf55d9-00cb-4672-a721-4b2c2700e23c\""

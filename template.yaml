@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DomainName:
+    Type: String
+  ACMCertificateArn:
+    Type: String
+
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Dev
+      Domain:
+        DomainName: !Ref DomainName
+        CertificateArn: !Ref ACMCertificateArn
+        EndpointConfiguration: EDGE
+
+  CountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: count
+      Runtime: go1.x
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Method: Get
+            Path: /
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  CountFunction:
+    Description: "First Lambda Function ARN"
+    Value: !GetAtt CountFunction.Arn
+  CountFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt CountFunctionRole.Arn
