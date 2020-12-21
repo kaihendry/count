@@ -38,18 +38,48 @@ func (h *countHandler) json(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.New("index").ParseFiles("static/index.tmpl"))
+
+	// Use go:embed https://github.com/golang/go/issues/41191 once it comes out
+	t, err := template.New("index").Parse(`
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset="utf-8" />
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>Count: {{ .Count }}</title>
+<style>
+body { background-color: white; font-family: Georgia; }
+</style>
+</head>
+<body>
+<dl>
+{{range $key, $value := .Env -}}
+{{ if eq $key "COMMIT" -}}
+<dt>{{ $key }}</dt><dd><a href="https://github.com/kaihendry/count/commit/{{ $value }}">{{ $value }}</a></dd>
+{{else}}
+<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
+{{- end}}
+{{- end}}
+</dl>
+<h3>Request Header</h3>
+<dl>
+{{range $key, $value := .Header -}}
+<dt>{{ $key }}</dt><dd>{{ $value }}</dd>
+{{end}}
+</dl>
+<p><a href=https://github.com/kaihendry/count>Source code</a></p>
+</body>
+</html>`)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
-		// Skip potentially security sensitive AWS stuff
-		if ep[0] == "AWS_SECRET_ACCESS_KEY" {
-			continue
-		}
-		if ep[0] == "AWS_SESSION_TOKEN" {
-			continue
-		}
-		envmap[ep[0]] = "********************" //ep[1]
+		envmap[ep[0]] = ep[1]
 	}
 
 	// https://golang.org/pkg/net/http/#Request
@@ -62,7 +92,7 @@ func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 	envmap["HOST"] = r.Host
 	envmap["REQUESTURI"] = r.RequestURI
 
-	err := t.ExecuteTemplate(w, "index.tmpl", struct {
+	err = t.Execute(w, struct {
 		Count  int32
 		Env    map[string]string
 		Header http.Header
