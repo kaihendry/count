@@ -8,7 +8,7 @@ DOMAINNAME = sam.goserverless.sg
 ACMCERTIFICATEARN = arn:aws:acm:us-east-1:862322258447:certificate/a7cf55d9-00cb-4672-a721-4b2c2700e23c
 
 deploy: build
-	AWS_PROFILE=$(PROFILE) sam deploy --stack-name $(STACK) --parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN)
+	AWS_PROFILE=$(PROFILE) sam deploy --stack-name $(STACK) --parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN) --no-confirm-changeset
 
 build:
 	CGO_ENABLED=0 sam build
