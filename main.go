@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"sync/atomic"
-	"text/template"
 
 	"github.com/apex/gateway"
 )
@@ -44,7 +44,6 @@ func (h *countHandler) json(w http.ResponseWriter, r *http.Request) {
 
 func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-
 	t, err := template.New("index").Parse(`
 <!DOCTYPE html>
 <html lang=en>
@@ -85,10 +84,10 @@ body { background-color: white; font-family: Georgia; }
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
 		// Skip potentially security sensitive AWS stuff
-		if ep[0] == "AWS_SECRET_ACCESS_KEY" {
+		if ep[0] == "AWS_SECRET_KEY" {
 			continue
 		}
-		if ep[0] == "AWS_SESSION_TOKEN" {
+		if ep[0] == "AWS_SECURITY_TOKEN" {
 			continue
 		}
 		envmap[ep[0]] = ep[1]
