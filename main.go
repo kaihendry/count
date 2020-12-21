@@ -90,6 +90,12 @@ body { background-color: white; font-family: Georgia; }
 		if ep[0] == "AWS_SECURITY_TOKEN" {
 			continue
 		}
+		if ep[0] == "AWS_SECRET_ACCESS_KEY" {
+			continue
+		}
+		if ep[0] == "AWS_SESSION_TOKEN" {
+			continue
+		}
 		envmap[ep[0]] = ep[1]
 	}
 
