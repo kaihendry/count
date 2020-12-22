@@ -14,7 +14,11 @@ build:
 	CGO_ENABLED=0 sam build
 
 validate:
-	aws cloudformation validate-template --template-body file://template.yaml
+	AWS_PROFILE=$(PROFILE) aws cloudformation validate-template --template-body file://template.yml
 
 destroy:
 	AWS_PROFILE=$(PROFILE) aws cloudformation delete-stack --stack-name $(STACK)
+
+sam-tail-logs:
+	# An error occurred (ResourceNotFoundException) if there are no logs yet
+	AWS_PROFILE=$(PROFILE) sam logs --name CountFunction --tail

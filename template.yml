@@ -20,6 +20,7 @@ Resources:
   CountFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: CountFunction # needed for sam logs!
       CodeUri: ./
       Handler: count
       Runtime: go1.x
