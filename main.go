@@ -14,6 +14,12 @@ import (
 
 // https://github.com/kaihendry/aws-sam-gateway-example/blob/master/lambda-go-serverless-api/main.go
 func main() {
+	// Now we can iterate locally 🙌
+	port := os.Getenv("_LAMBDA_SERVER_PORT")
+	if port == "" {
+		log.Printf("Assuming local development")
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), routes()), nil)
+	}
 	log.Fatal(gateway.ListenAndServe("", routes()), nil)
 }
 
