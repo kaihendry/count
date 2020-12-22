@@ -19,6 +19,7 @@ jobs:
         run: make
       - name: Test
         run: CGO_ENABLED=0 go test -v .
-      - name: Deploy
+      - name: Setup func env
         uses: Azure/functions-action@v1
+      - name: Deploy
         run: make deploy
