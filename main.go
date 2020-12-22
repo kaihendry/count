@@ -14,7 +14,14 @@ var Version string
 
 type countHandler struct{ n int32 }
 
-func main() { log.Fatal(http.ListenAndServe(":"+os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT"), routes())) }
+func main() {
+	port := os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT")
+	if port == "" {
+		log.Printf("Assuming local development")
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), routes()), nil)
+	}
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT"), routes()))
+}
 
 func (h *countHandler) inc() int32 {
 	return atomic.AddInt32(&h.n, 1)
@@ -23,8 +30,6 @@ func (h *countHandler) inc() int32 {
 func routes() *http.ServeMux {
 	h := countHandler{}
 	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir("./static"))
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/favicon.ico", http.NotFound)
 	mux.HandleFunc("/metrics", h.prometheus)
 	mux.HandleFunc("/", h.countpage)
