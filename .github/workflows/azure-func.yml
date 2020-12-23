@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - azure-functions
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   build:
