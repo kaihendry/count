@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - gcp-cloudrun
+  schedule:
+    - cron: '0 0 * * *'
+
 
 env:
   PROJECT_ID: idiotbox
