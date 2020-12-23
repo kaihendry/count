@@ -1,0 +1,32 @@
+name: Deploy SLS
+
+on:
+  push:
+    branches:
+      - serverless
+    paths-ignore:
+      - '**/README.md'
+    workflow_dispatch:
+    schedule:
+      - cron: '0 0 * * *'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        id: go
+      - name: Build
+        run: make
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Setup serverless
+        uses: serverless/github-action@master
+      - name: sls deploy
+        run: make deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
