@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - gcp-functions
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   setup-build-deploy:
