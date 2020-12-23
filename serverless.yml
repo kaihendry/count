@@ -11,3 +11,7 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+
+custom:
+  customDomain:
+    domainName: sls.goserverless.sg
