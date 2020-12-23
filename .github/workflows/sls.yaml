@@ -18,10 +18,10 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         id: go
-      - name: Build
-        run: make
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Build
+        run: make
       - name: Setup serverless
         uses: serverless/github-action@master
       - name: sls deploy
