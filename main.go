@@ -84,6 +84,11 @@ body { background-color: white; font-family: Georgia; }
 	envmap := make(map[string]string)
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
+		// Exposing this is a security risk according to @polarply
+		if ep[0] == "APPSETTING_SCM_RUN_FROM_PACKAGE" {
+			// So we skip it
+			continue
+		}
 		envmap[ep[0]] = ep[1]
 	}
 
