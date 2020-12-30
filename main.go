@@ -82,11 +82,23 @@ body { background-color: white; font-family: Georgia; }
 	}
 
 	envmap := make(map[string]string)
+
 	for _, e := range os.Environ() {
 		ep := strings.SplitN(e, "=", 2)
-		// Exposing this is a security risk according to @polarply
-		if ep[0] == "APPSETTING_SCM_RUN_FROM_PACKAGE" {
-			// So we skip it
+		// Exposing certain environment variables is a security risk according to @polarply
+		switch ep[0] {
+		case "APPSETTING_WEBSITE_RUN_FROM_PACKAGE",
+			"APPSETTING_SCM_RUN_FROM_PACKAGE",
+			"APPSETTING_AzureWebJobsStorage",
+			"AzureWebJobsStorage",
+			"CONTAINER_START_CONTEXT_SAS_URI",
+			"SCM_RUN_FROM_PACKAGE",
+			"WEBSITE_RUN_FROM_PACKAGE":
+			// So we skip
+			continue
+		}
+		if strings.HasSuffix(strings.ToLower(ep[0]), "key") {
+			// So we skip anything that might be a key ..
 			continue
 		}
 		envmap[ep[0]] = ep[1]

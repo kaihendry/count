@@ -7,10 +7,11 @@ bin/local/main: main.go
 	echo Building $(VERSION)
 	mkdir -p bin/local
 	CGO_ENABLED=0 go build -ldflags "-X main.Version=${VERSION}" -o bin/local/main main.go
+
 localdev:
 	func start --verbose
 
-deploy:
+deploy: bin/local/main
 	func azure functionapp publish $(APP)
 
 # https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md
