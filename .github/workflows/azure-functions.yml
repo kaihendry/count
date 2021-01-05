@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - azure-functions
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
 
