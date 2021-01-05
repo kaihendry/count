@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - gcp-functions
+  worflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
 
