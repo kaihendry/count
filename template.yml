@@ -19,6 +19,9 @@ Resources:
 
   CountFunction:
     Type: AWS::Serverless::Function
+    Metadata:
+      # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/building-custom-runtimes.html
+      BuildMethod: makefile
     Properties:
       FunctionName: CountFunction # needed for sam logs!
       CodeUri: ./
