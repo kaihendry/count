@@ -1,3 +1,5 @@
 .aws-sam/
 count
 gin-bin
+bin
+.serverless

@@ -8,17 +8,17 @@ Parameters:
     Type: String
 
 Resources:
-  MyApi:
-    Type: AWS::Serverless::Api
+  Gateway:
+    Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: Dev
       Domain:
         DomainName: !Ref DomainName
         CertificateArn: !Ref ACMCertificateArn
-        EndpointConfiguration: EDGE
 
   CountFunction:
     Type: AWS::Serverless::Function
+    Architectures:
+      - x86_64
     Metadata:
       # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/building-custom-runtimes.html
       BuildMethod: makefile
@@ -28,16 +28,10 @@ Resources:
       Handler: count
       Runtime: go1.x
       Events:
-        ProxyApiRoot:
-          Type: Api
+        CatchAll:
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref MyApi
-            Method: Get
-            Path: /
-        ProxyApiGreedy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref MyApi
+            ApiId: !Ref Gateway
             Path: /{proxy+}
             Method: ANY
 
@@ -48,3 +42,7 @@ Outputs:
   CountFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt CountFunctionRole.Arn
+  GatewayEndPoint:
+    Value: !Sub "https://${Gateway}.execute-api.${AWS::Region}.amazonaws.com/"
+  CountFunctionLogs:
+    Value: !Sub "sam logs --name ${CountFunction} --region ${AWS::Region} --tail"
