@@ -17,16 +17,14 @@ Resources:
 
   CountFunction:
     Type: AWS::Serverless::Function
-    Architectures:
-      - x86_64
     Metadata:
-      # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/building-custom-runtimes.html
       BuildMethod: makefile
     Properties:
-      FunctionName: CountFunction # needed for sam logs!
-      CodeUri: ./
+      Architectures:
+        - arm64
+      CodeUri: .
       Handler: count
-      Runtime: go1.x
+      Runtime: provided.al2
       Events:
         CatchAll:
           Type: HttpApi
@@ -44,5 +42,3 @@ Outputs:
     Value: !GetAtt CountFunctionRole.Arn
   GatewayEndPoint:
     Value: !Sub "https://${Gateway}.execute-api.${AWS::Region}.amazonaws.com/"
-  CountFunctionLogs:
-    Value: !Sub "sam logs --name ${CountFunction} --region ${AWS::Region} --tail"

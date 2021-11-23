@@ -14,7 +14,7 @@ import (
 
 // https://github.com/kaihendry/aws-sam-gateway-example/blob/master/lambda-go-serverless-api/main.go
 func main() {
-	if _, ok := os.LookupEnv("AWS_EXECUTION_ENV"); ok {
+	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
 		log.Fatal(gateway.ListenAndServe("", routes()), nil)
 	} else {
 		log.Printf("Assuming local development")
@@ -57,7 +57,7 @@ func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 <meta name=viewport content="width=device-width, initial-scale=1">
 <title>Count: {{ .Count }}</title>
 <style>
-html { max-width: 70ch; padding: 3em 1em; margin: auto; line-height: 1.75; font-size: 1.25em; }
+html { background-color: #fff5f5; max-width: 70ch; padding: 3em 1em; margin: auto; line-height: 1.75; font-size: 1.25em; }
 </style>
 </head>
 <body>
@@ -76,7 +76,7 @@ html { max-width: 70ch; padding: 3em 1em; margin: auto; line-height: 1.75; font-
 <dt>{{ $key }}</dt><dd>{{ $value }}</dd>
 {{end}}
 </dl>
-<p><a href=https://github.com/kaihendry/count/tree/sam>Source code</a></p>
+<p><a href=https://github.com/kaihendry/count/tree/sam-arm64>Source code</a></p>
 </body>
 </html>`)
 
