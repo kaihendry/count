@@ -1,6 +1,6 @@
 STACK = sarmcount
 PROFILE = gosls
-VERSION = $(shell git rev-parse --abbrev-ref HEAD)-$(shell git rev-parse --short HEAD)
+VERSION = arm0.1
 
 .PHONY: build deploy validate destroy
 
