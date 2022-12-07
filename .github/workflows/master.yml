@@ -5,10 +5,10 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**/README.md'
+      - "**/README.md"
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.15
+          go-version: ^1.19
         id: go
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
