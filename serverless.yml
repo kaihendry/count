@@ -12,9 +12,11 @@ functions:
   count:
     handler: count
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: /
+          method: get
+          cors: true
 
 custom:
   customDomain:
-    domainName: sls.goserverless.sg
+    domainName: sls.dabase.com
