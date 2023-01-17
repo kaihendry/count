@@ -21,8 +21,6 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: gcp-cloudrun
 
       - id: "auth"
         name: "Authenticate to Google Cloud"
@@ -31,27 +29,10 @@ jobs:
           project_id: ${{ secrets.RUN_PROJECT }}
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v1"
-        with:
-          project_id: ${{ secrets.RUN_PROJECT }}
+      - id: "deploy"
+        uses: "google-github-actions/deploy-cloudrun@v1"
+        with: # use source code
+          source: .
 
-      - name: "Use gcloud CLI"
-        run: "gcloud info"
-
-      # Build and push image to Google Container Registry
-      - name: Build
-        run: |-
-          gcloud builds submit \
-            --quiet \
-            --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
-
-      # Deploy image to Cloud Run
-      - name: Deploy
-        run: |-
-          gcloud run deploy "$SERVICE_NAME" \
-            --quiet \
-            --region "$RUN_REGION" \
-            --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-            --platform "managed" \
-            --allow-unauthenticated
+      - name: "Use output"
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
