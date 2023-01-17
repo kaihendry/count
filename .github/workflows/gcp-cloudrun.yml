@@ -1,11 +1,8 @@
 # https://raw.githubusercontent.com/google-github-actions/setup-gcloud/master/example-workflows/cloud-run/.github/workflows/cloud-run.yml
-
 name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches:
-      - gcp-cloudrun
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
@@ -21,16 +18,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-            ref: gcp-cloudrun
+          ref: gcp-cloudrun
 
-      # Setup gcloud CLI
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
         with:
           project_id: ${{ secrets.RUN_PROJECT }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          project_id: ${{ secrets.RUN_PROJECT }}
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
 
       # Build and push image to Google Container Registry
       - name: Build
