@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 	"sync/atomic"
 )
@@ -54,6 +55,8 @@ func (h *countHandler) countpage(w http.ResponseWriter, r *http.Request) {
 
 	// https://golang.org/pkg/net/http/#Request
 	envmap["COUNTVERSION"] = Version
+	// get go runtime info
+	envmap["GO_VERSION"] = runtime.Version()
 	envmap["METHOD"] = r.Method
 	envmap["PROTO"] = r.Proto
 	envmap["CONTENTLENGTH"] = fmt.Sprintf("%d", r.ContentLength)
