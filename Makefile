@@ -1,12 +1,12 @@
 STACK = samcount
-PROFILE = gosls
+PROFILE = mine
 VERSION = $(shell git rev-parse --abbrev-ref HEAD)-$(shell git rev-parse --short HEAD)
 
 .PHONY: build deploy validate destroy
 
-# aws --region us-east-1 --profile gosls acm list-certificate
-DOMAINNAME = sam.goserverless.sg
-ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:862322258447:certificate/a9363cb2-7413-430c-89d3-b64f634480a7
+DOMAINNAME = sam.dabase.com
+ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84-fb44-4782-b7eb-d9c7f8714908
+
 
 deploy:
 	sam build
