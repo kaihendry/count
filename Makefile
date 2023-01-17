@@ -1,5 +1,4 @@
 STACK = samcount
-PROFILE = mine
 VERSION = $(shell git rev-parse --abbrev-ref HEAD)-$(shell git rev-parse --short HEAD)
 
 .PHONY: build deploy validate destroy
@@ -10,16 +9,16 @@ ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84
 
 deploy:
 	sam build
-	AWS_PROFILE=$(PROFILE) sam deploy --resolve-s3 --stack-name $(STACK) --parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN) --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+	sam deploy --resolve-s3 --stack-name $(STACK) --parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN) --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
 
 build-CountFunction:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o ${ARTIFACTS_DIR}/count
 
 validate:
-	AWS_PROFILE=$(PROFILE) aws cloudformation validate-template --template-body file://template.yml
+	aws cloudformation validate-template --template-body file://template.yml
 
 destroy:
-	AWS_PROFILE=$(PROFILE) aws cloudformation delete-stack --stack-name $(STACK)
+	aws cloudformation delete-stack --stack-name $(STACK)
 
 sam-tail-logs:
-	AWS_PROFILE=$(PROFILE) sam logs --stack-name $(STACK) --tail
+	sam logs --stack-name $(STACK) --tail
