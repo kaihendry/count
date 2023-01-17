@@ -2,8 +2,6 @@ name: Deploy via Serverless framework
 
 on:
   push:
-  schedule:
-    - cron: "0 0 * * *"
 
 permissions:
   id-token: write
@@ -28,3 +26,5 @@ jobs:
         with:
           args: -c "serverless plugin install --name serverless-domain-manager && serverless deploy"
           entrypoint: /bin/sh
+        env:
+          AWS_REGION: ap-southeast-1

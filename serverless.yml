@@ -19,8 +19,8 @@ functions:
 
 custom:
   customDomain:
-    http:
-      domainName: sls.dabase.com
-      certificateName: "*.dabase.com"
-      createRoute53Record: false
-      endpointType: regional
+    apiType: http
+    domainName: sls.dabase.com
+    createRoute53Record: false
+    endpointType: regional
+    certificateArn: arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84-fb44-4782-b7eb-d9c7f8714908
