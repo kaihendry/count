@@ -33,6 +33,7 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v1"
         with: # use source code
           source: .
+          service: ${{ env.SERVICE_NAME }}
 
       - name: "Use output"
         run: 'curl "${{ steps.deploy.outputs.url }}"'
