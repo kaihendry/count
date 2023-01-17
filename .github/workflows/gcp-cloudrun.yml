@@ -19,6 +19,7 @@ jobs:
 
     steps:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -31,9 +32,10 @@ jobs:
 
       - id: "deploy"
         uses: "google-github-actions/deploy-cloudrun@v1"
-        with: # use source code
+        with:
           source: .
           service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.RUN_REGION }}
 
       - name: "Use output"
         run: 'curl "${{ steps.deploy.outputs.url }}"'
