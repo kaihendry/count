@@ -1,8 +1,0 @@
-# for trigger_build.sh to work, we need this placeholder
-name: Deploy SAM
-
-on:
-  push:
-    branches:
-      - sam
-  workflow_dispatch:

@@ -1,8 +1,0 @@
-# for trigger_build.sh to work, we need this placeholder
-name: Deploy SLS
-
-on:
-  push:
-    branches:
-      - serverless
-  workflow_dispatch:

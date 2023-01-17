@@ -1,8 +1,0 @@
-# for trigger_build.sh to work, we need this placeholder
-name: Deploy Azure function
-
-on:
-  push:
-    branches:
-      - azure-functions
-  workflow_dispatch:

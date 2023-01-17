@@ -1,8 +1,0 @@
-# for trigger_build.sh to work, we need this placeholder
-name: Build and Deploy to Cloud Functions
-
-on:
-  push:
-    branches:
-      - gcp-functions
-  workflow_dispatch:
