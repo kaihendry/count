@@ -19,4 +19,7 @@ functions:
 
 custom:
   customDomain:
-    domainName: sls.dabase.com
+    http:
+      domainName: sls.dabase.com
+      certificateName: "*.dabase.com"
+      createRoute53Record: false
