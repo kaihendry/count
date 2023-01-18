@@ -1,6 +1,5 @@
 {
   "name": "count",
-  "profile": "gosls",
   "lambda": {
     "runtime": "nodejs16.x"
   },
