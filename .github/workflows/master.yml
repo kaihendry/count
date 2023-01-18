@@ -3,6 +3,10 @@ name: Deploy via Apex Up
 on:
   push:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build
@@ -12,7 +16,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: "stable"
-          check-latest: true
       - name: Build
         run: CGO_ENABLED=0 go build -o server *.go
       - name: Test
