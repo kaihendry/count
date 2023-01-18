@@ -24,7 +24,4 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3.1
         with:
-          args: -c "serverless plugin install --name serverless-domain-manager && serverless deploy"
-          entrypoint: /bin/sh
-        env:
-          AWS_REGION: ap-southeast-1
+          args: deploy
