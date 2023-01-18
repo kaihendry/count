@@ -8,7 +8,7 @@
   },
   "stages": {
     "staging": {
-      "domain": "count.goserverless.sg"
+      "domain": "apex.dabase.com"
     }
   },
   "regions": ["ap-southeast-1"]
