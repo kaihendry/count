@@ -1,29 +1,29 @@
 name: Build and Deploy to Cloud Functions
 
-on:
-  push:
-    branches:
-      - gcp-functions
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'
+on: push
 
 jobs:
   setup-build-deploy:
-    name: Setup, Build, and Deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v3
         # https://github.com/google-github-actions/deploy-cloud-functions
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          project_id: idiotbox
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
       - id: deploy
-        uses: google-github-actions/deploy-cloud-functions@main
+        uses: "google-github-actions/deploy-cloud-functions@v1"
         with:
           name: Countpage
-          runtime: go113
-          region: asia-east2
+          runtime: go119
+          region: asia-southeast1
           credentials: ${{ secrets.GCP_SA_KEY }}
 
       # Example of using the output

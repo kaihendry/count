@@ -1,9 +1,11 @@
+REGION=asia-southeast1
+RUNTIME=go119
+
 deploy:
-	# Not available in Singapore :( https://cloud.google.com/functions/docs/locations
-	gcloud functions deploy Countpage --runtime go113 --trigger-http --region asia-east2 --allow-unauthenticated
+	gcloud functions deploy Countpage --runtime $(RUNTIME) --trigger-http --region $(REGION) --allow-unauthenticated
 
 logs:
-	gcloud functions logs read --region asia-east2
+	gcloud functions logs read --region $(REGION)
 
 describe:
-	gcloud functions describe Countpage --region asia-east2
+	gcloud functions describe Countpage --region $(REGION)
