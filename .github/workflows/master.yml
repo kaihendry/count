@@ -1,36 +1,27 @@
-name: Deploy Apex Up
+name: Deploy via Apex Up
 
 on:
   push:
-    branches:
-      - master
-    paths-ignore:
-      - "**/README.md"
-  workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: ^1.19
-        id: go
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
+          go-version: "stable"
+          check-latest: true
       - name: Build
         run: CGO_ENABLED=0 go build -o server *.go
       - name: Test
         run: CGO_ENABLED=0 go test -v .
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::407461997746:role/github-actions-Role-56IHHM969DKJ
+          aws-region: ap-southeast-1
       - name: Deploy
         uses: apex/actions/up@v0.5.1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          UP_CONFIG: ${{ secrets.UP_CONFIG }}
         with:
           stage: staging
